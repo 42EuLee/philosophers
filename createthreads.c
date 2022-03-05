@@ -6,9 +6,9 @@ t_philo	*createthreads(char **argv)
 
 	philo = (t_philo *)malloc(sizeof(t_philo));
 	philo->num = ft_atoi(argv[1]);
-	philo->eat_time = ft_atoi(argv[2]);
-	philo->death_time = ft_atoi(argv[3]);
-	philo->sleep_time = ft_atoi(argv[4]);
+	philo->death_time = (ft_atoi(argv[2]));
+	philo->eat_time = ft_atoi(argv[3]) * 1000;
+	philo->sleep_time = ft_atoi(argv[4]) * 1000;
 	philo->eat_cycle = ft_atoi(argv[5]);
 	philo->info = (t_info *)malloc(sizeof(t_info) * philo->num);
 	philo->lock = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t)

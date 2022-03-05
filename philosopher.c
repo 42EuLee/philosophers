@@ -18,6 +18,7 @@ t_philo	*initstates(t_philo *philo)
 		philo->info[i].ptr = philo;
 		i++;
 	}
+	philo->dead = 0;
 	return (philo);
 }
 
@@ -28,56 +29,86 @@ void	*handler(void *arg)
 
 	info = (t_info *)arg;
 
-	printf("%ld ",s_to_m());
+	//printf("%ld ",s_to_m());
 	//printf("%d: philo->num\n", philo->num);
-	printf("Thread %d: thinking b4 eating\n", info->id);
-
-	if (info->state == thinking)
+	//printf("%d is thinking b4 eating\n", info->id);
+	info->death_timer = s_to_m() + info->ptr->death_time;
+	// printf("death time: %ld\n", (long)info->ptr->death_time);
+	// printf("current_time: %ld\n", s_to_m());
+	// printf("death_timer: %ld\n", info->death_timer);
+	while (!info->ptr->dead)
 	{
-		if (info->id == info->ptr->num - 1)
+		if (info->state == thinking)
 		{
-			pthread_mutex_lock(&info->lock[info->id]);
-			printf("has taken a fork: %d\n", info->id);
-			pthread_mutex_lock(&info->lock[0]);
-			// printf("pick up fork2: %d\n", 0 );
-			info->state = eating;
+			if (info->id == info->ptr->num - 1)
+			{
+				if (pthread_mutex_lock(&info->lock[info->id]) == 0)
+				{
+					info->right = 1;
+					printf("%s%ld %d has taken a fork\n%s", GREEN, s_to_m(), info->id, NC);
+				}
+				if (pthread_mutex_lock(&info->lock[0]) == 0)
+				{
+					info->left = 1;
+					printf("%s%ld %d has taken a fork\n%s", GREEN, s_to_m(), 0, NC);
+					//printf("%s%ld %d has taken a fork2\n%s", GREEN, s_to_m(), 0, NC);
+				}
+			}
+			else
+			{
+				if (pthread_mutex_lock(&info->lock[info->id]) == 0)
+				{
+					info->right = 1;
+					printf("%s%ld %d has taken a fork\n%s", GREEN, s_to_m(), info->id, NC);
+				}
+				if (pthread_mutex_lock(&info->lock[info->id + 1]) == 0)
+				{
+					info->left = 1;
+					printf("%s%ld %d has taken a fork\n%s", GREEN, s_to_m(), info->id, NC);
+					//printf("%s%ld %d has taken a fork2\n%s", GREEN, s_to_m(), info->id, NC);
+				}
+
+			}
+			if ((info->right == 1) && (info->left == 1))
+			{
+				info->death_timer = s_to_m() + info->ptr->death_time * 2;
+				info->state = eating;
+				printf("%s%ld %d is eating\n%s", YELLOW, s_to_m(), info->id, NC);
+				usleep(info->ptr->eat_time);
+			}
 		}
-		else
+		if (info->state == eating)
 		{
-			pthread_mutex_lock(&info->lock[info->id]);
-			printf("has taken fork: %d\n", info->id);
-			pthread_mutex_lock(&info->lock[info->id + 1]);
-			// printf("pick up fork2: %d\n", info->id + 1 );
-			info->state = eating;
+			if (info->id == info->ptr->num - 1)
+			{
+				pthread_mutex_unlock(&info->lock[info->id]);
+				//printf("%ld %d puts down a fork\n", s_to_m(), info->id);
+				pthread_mutex_unlock(&info->lock[0]);
+			}
+			else
+			{
+				pthread_mutex_unlock(&info->lock[info->id]);
+				//printf("%ld %d puts down their fork\n", s_to_m(), info->id);
+				pthread_mutex_unlock(&info->lock[info->id + 1]);
+			}
+			info->death_timer = s_to_m() + info->ptr->death_time;
+			info->state = sleeping;
+			printf("%s%ld %d is sleeping\n%s", BLUE, s_to_m(), info->id, NC);
+			usleep(info->ptr->sleep_time);
+			//printf("%ld %d has done a cycle\n", s_to_m(), info->id);
+			info->left = 0;
+			info->right = 0;
+			info->state = thinking;
+			printf("%s%ld %d is thinking\n%s", TEAL, s_to_m(), info->id, NC);
+		}
+		if (s_to_m() > info->death_timer)
+		{
+			printf("%s%ld %d died%s\n", RED, s_to_m(), info->id, NC);
+			info->ptr->dead = 1;
+			break ;
 		}
 	}
-	if (info->state == eating)
-	{
-		printf("Thread %d: eating yo\n", info->id);
-		usleep(1000000);
-		info->state = sleeping;
-		printf("Thread %d: sleeping yo\n", info->id);
-		usleep(2000000);
-		if (info->id == info->ptr->num - 1)
-		{
-			pthread_mutex_unlock(&info->lock[info->id]);
-			printf("has taken fork: %d\n", info->id);
-			pthread_mutex_unlock(&info->lock[0]);
-			// printf("puts down fork2: %d\n", 0);
-		}
-		else
-		{
-			pthread_mutex_unlock(&info->lock[info->id]);
-			printf("has taken fork: %d\n", info->id);
-			pthread_mutex_unlock(&info->lock[info->id + 1]);
-			// printf("puts down fork2: %d\n", info->id + 1);
-		}
-		//printf("Thread %d: Done\n", info->id);
-		info->time_left = 0;
-		info->state = thinking;
-	}
-
-	//return (NULL);
+	return (NULL);
 }
 
 int	main(int argc, char **argv)
@@ -98,6 +129,7 @@ int	main(int argc, char **argv)
 		if (error != 0)
 			printf("\n Thread can't be created: [%s]", strerror(error));
 		i++;
+		usleep(1);
 	}
 	// joining philosopher threads
 	i = 0;

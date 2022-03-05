@@ -15,7 +15,7 @@ $(NAME): $(OBJS)
 
 
 test:
-		./philo 5 4 3 2 1
+		./philo 5 400 200 200 1
 
 clean:
 		$(RM) $(OBJS)
