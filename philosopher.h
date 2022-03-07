@@ -45,5 +45,8 @@ int		ft_atoi(const char *str);
 int		main(int argc, char **argv);
 t_philo	*createthreads(char **argv);
 long	s_to_m(void);
+void	*handler(void *arg);
+t_philo	*thread_create(t_philo *philo);
+void	ft_usleep(int sleep);
 
 #endif

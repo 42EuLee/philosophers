@@ -3,7 +3,7 @@ NAME 	= philo
 CC		= gcc -pthread
 RM		= rm -f
 
-SRCS	= ft_atoi.c philosopher.c createthreads.c s_to_m.c
+SRCS	= ft_atoi.c philosopher.c createthreads.c s_to_m.c thread_create.c ft_usleep.c
 
 OBJS		= $(SRCS:.c=.o)
 
@@ -14,7 +14,7 @@ $(NAME): $(OBJS)
 		$(CC) $(OBJS) -o $@
 
 
-test:
+test: re
 		./philo 5 400 200 200 1
 
 clean:
