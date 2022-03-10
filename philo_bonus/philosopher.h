@@ -34,7 +34,7 @@ typedef struct s_philo
 	int				eat_time;
 	int				sleep_time;
 	int				eat_cycle;
-	int				counter; // check
+	int				counter;
 	int				dead;
 	int				eaten;
 	t_info			*info;

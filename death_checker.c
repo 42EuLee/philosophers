@@ -1,11 +1,25 @@
-
-#include <philosopher.h>
+#include "philosopher.h"
 
 void	death_checker(t_philo *philo)
 {
-	while (philo->dead = 0)
+	int	i;
+
+	while (!philo->dead)
 	{
-		printf("%s%ld %d died%s\n", RED, s_to_m(), philo->info->id, NC);
-		philo->dead = 1;
+		i = 0;
+		if (philo->eaten == philo->num)
+			return ;
+		while (!(philo->dead) && (i < philo->num))
+		{
+			if (s_to_m() > philo->info[i].death_timer)
+			{
+				philo->dead = 1;
+				print_log(&philo->info[i]);
+				ft_usleep(1);
+				break ;
+			}
+			i++;
+			ft_usleep(1);
+		}
 	}
 }

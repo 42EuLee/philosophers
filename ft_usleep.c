@@ -9,7 +9,8 @@ void	ft_usleep(int sleep)
 	while (1)
 	{
 		current = s_to_m();
-		if (((current - begin) * 1000) > (long)sleep)
+		if (((current - begin) * 1000) >= (long)sleep)
 			break ;
+		usleep(100);
 	}
 }
