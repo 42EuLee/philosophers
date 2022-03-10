@@ -18,9 +18,11 @@ void	*handler(void *arg)
 	i = 0;
 	//while (i < 10)
 	{
-		sem_wait(sem);
 		//printf("hi\n");
+		sem_wait(sem);
 		sleep(1);
+		printf("pid: %d\n", getpid());	
+
 		//printf("bye\n");
 		sem_post(sem);
 	}
@@ -40,7 +42,7 @@ int	main(int argc, char **argv)
 	printf("philo->num %d\n\n", philo->num);
 	test = "./test";
 	sem_unlink(test);
-	sema = sem_open(test, O_CREAT, 0644 , philo->num); // CHECK PROPERLY THE INITIAL NUMBER
+	sema = sem_open("/test", O_CREAT, 0644 , 1); // CHECK PROPERLY THE INITIAL NUMBER
 	// pthread_create(&t1, NULL, handler, sema);
 	// //pthread_create(&t2, NULL, handler, sema);
 	// pthread_join(t1, NULL);
@@ -61,17 +63,30 @@ int	main(int argc, char **argv)
 	// 	i++;
 	// }
 	
-	while (i++ < 3)
+	while (i < 3)
 	{
 		if (fork() == 0)
 		{
 			pthread_create(&t1, NULL, handler, sema);
 			pthread_join(t1, NULL);
-			printf("pid: %d\n", getpid());
-			exit(0);
+			
+			return (0);
 		}
+		i++;
 	}
+
+	// i = -1;
+	// while (++i < 3)
+	// 	sem_wait(sema);
+	printf("exit\n");
+
 	sem_close(sema);
 	sem_unlink(test);
 	return (0);
 }
+
+// int	main(int argc, char **argv)
+// {
+// 	fork();
+// 	printf("hi\n");
+// }
