@@ -1,4 +1,4 @@
-#include "philosopher.h"
+#include "philosopher_bonus.h"
 
 t_philo	*thread_create(t_philo *philo)
 {

@@ -21,5 +21,6 @@ t_philo	*init_threads(int argc, char **argv)
 	// 		* philo->num);
 	// pthread_mutex_init(&philo->miniphone, NULL);
 	philo->thread = malloc(sizeof(pthread_t) * philo->num);
+	philo->pid = malloc(sizeof(int) * philo->num);
 	return (philo);
 }

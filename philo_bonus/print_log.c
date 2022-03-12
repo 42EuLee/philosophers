@@ -15,7 +15,7 @@ void	print_log(t_info *info)
 		if (info->state == eating)
 			printf("%s%ld %d is eating\n%s", YELLOW, s_to_m(), info->id, NC);
 	}
-	if ((info->ptr->dead) == 1)
+	if ((info->ptr->dead == 1)) // might need to change its place
 	{
 		info->ptr->dead++;
 		printf("%s%ld %d died%s\n", RED, s_to_m(), info->id, NC);

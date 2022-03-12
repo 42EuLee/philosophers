@@ -8,6 +8,7 @@
 # include <unistd.h>
 # include <limits.h>
 # include <sys/time.h>
+# include <fcntl.h>
 # include "styling.h"
 # include <semaphore.h>
 
@@ -37,8 +38,10 @@ typedef struct s_philo
 	int				counter;
 	int				dead;
 	int				eaten;
+	int				*pid;
 	t_info			*info;
 	sem_t			*sem;
+	sem_t			*death;
 	pthread_t		*thread;
 	pthread_mutex_t	*fork;
 	pthread_mutex_t	miniphone;
@@ -55,7 +58,7 @@ void	ft_usleep(int sleep);
 int		odd_num(int num);
 int		even_num(int num);
 void	print_log(t_info *info);
-void	death_checker(t_philo *philo);
+void	*death_checker(void *arg);
 void	free_malloc(t_philo *philo);
 int		check_invalid(int argc, char **argv);
 void	think_to_eat(t_info *info);

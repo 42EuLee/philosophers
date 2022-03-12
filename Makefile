@@ -29,7 +29,7 @@ $(PHILO_B): $(OBJS_B)
 
 
 test: re
-		./philo 50 410 200 200
+		./philo 4 400 200 200
 
 test2: re
 		./philo_bonus 4 410 200 200 1

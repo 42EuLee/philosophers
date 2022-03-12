@@ -11,7 +11,7 @@ SRCS	= ft_atoi.c philosopher.c init_threads.c s_to_m.c thread_create.c ft_usleep
 			eat_to_sleep.c init_states.c check_invalid.c
 
 SRCS_B	= philosopher_bonus.c init_threads.c init_states.c ft_atoi.c s_to_m.c think_to_eat.c \
-			even_num.c odd_num.c eat_to_sleep.c ft_usleep.c print_log.c
+			even_num.c odd_num.c eat_to_sleep.c ft_usleep.c print_log.c death_checker.c
 
 OBJS	= $(SRCS:.c=.o)
 
@@ -33,7 +33,7 @@ test: re
 		./philo 50 410 200 200
 
 test2: re
-		./philo_bonus 4 410 200 200 1
+		./philo_bonus 4 400 200 200 1
 
 clean:
 		$(RM) $(OBJS) $(OBJS_B)
