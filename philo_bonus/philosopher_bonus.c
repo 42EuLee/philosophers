@@ -1,92 +1,76 @@
-#include "philosopher.h"
+#include "philosopher_bonus.h"
 
-typedef struct s_philob
-{
-	int		num;
-	int		death_time;
-	int		eat_time;
-	int		sleep_time;
-	int		eat_cycle;
-}	t_philob;
 
 void	*handler(void *arg)
 {
-	sem_t	*sem;
-	static int		i;
-	sem = (sem_t *)arg;
+	// each process is threaded
+	t_info *info;
+	int		i;
+	info = (t_info *)arg;
 
+	//printf("hi\n");
 	i = 0;
-	//while (i < 10)
+	while (i < 5)
 	{
-		//printf("hi\n");
-		sem_wait(sem);
-		sleep(1);
-		printf("pid: %d\n", getpid());	
-
-		//printf("bye\n");
-		sem_post(sem);
+		if (info->state == thinking)
+		{
+			print_log(info);
+			think_to_eat(info);
+			eat_to_sleep(info);
+			// sem_wait(philo->sem); // DECREMENT THE FORKS
+			// sem_wait(philo->sem); 
+			// sleep(1);
+		//printf("pid: %d\n", getpid());	
+			//printf("bye\n");
+		}
+		i++;
 	}
+	//printf("hi");
 	return (NULL);
 }
 
 int	main(int argc, char **argv)
 {	
-	sem_t	*sema;
-	t_philob *philo;
-	char	*test;
-	pthread_t	t1;
+	t_philo		*philo;
+	char		*test;
+	//pthread_t	t1;
 	int			i;
-	philo = (t_philob *)malloc(sizeof(t_philob));
 
-	philo->num = 2;
-	printf("philo->num %d\n\n", philo->num);
-	test = "./test";
+	philo = init_threads(argc, argv);
+	philo = init_states(philo);
+	//philo = thread_create(philo);
+	//printf("philo->num %d\n\n", philo->num);
+	test = "test";
 	sem_unlink(test);
-	sema = sem_open("/test", O_CREAT, 0644 , 1); // CHECK PROPERLY THE INITIAL NUMBER
-	// pthread_create(&t1, NULL, handler, sema);
-	// //pthread_create(&t2, NULL, handler, sema);
-	// pthread_join(t1, NULL);
-	// //pthread_join(t2, NULL);
+	philo->sem = sem_open("test", O_CREAT, 0644 , 0); // CHECK PROPERLY THE INITIAL NUMBER
 	
-	i = 0;
-	//fork();
-	// while (i < philo->num)
-	// {
-	// 	if (printf("Fork return: %d\n", fork() == 0))
-	// 	{
-			
-	// 		pthread_create(&t1, NULL, handler, sema);
-	// 		pthread_join(t1, NULL);
-	// 		printf("PID: %d\n", getpid());
-	// 		exit(0);
-	// 	}
-	// 	i++;
-	// }
-	
-	while (i < 3)
+	i = -1;
+	while (++i < philo->num) // populate forks (Get_dem_forks depening on philo)
+	{
+		sem_post(philo->sem);
+		printf("post: %d\n", i);
+	}
+	printf("\n");
+	i = -1;
+	while (++i < philo->num)
 	{
 		if (fork() == 0)
 		{
-			pthread_create(&t1, NULL, handler, sema);
-			pthread_join(t1, NULL);
-			
+			//printf("thread create: %d\n", i);
+			//printf("pid: %d\n", getpid());
+			//pthread_create(&t1, NULL, handler, philo->info); 
+			pthread_create(&philo->thread[i], NULL, &handler, &philo->info[i]); // sem_t in philo_t
+			pthread_join(philo->thread[i], NULL);
 			return (0);
 		}
-		i++;
 	}
 
 	// i = -1;
-	// while (++i < 3)
-	// 	sem_wait(sema);
+	// while (++i < philo->num)
+	// 	sem_wait(sem);
+	sleep(1); // might need to work on this
 	printf("exit\n");
-
-	sem_close(sema);
+	sem_close(philo->sem);
 	sem_unlink(test);
 	return (0);
 }
-
-// int	main(int argc, char **argv)
-// {
-// 	fork();
-// 	printf("hi\n");
-// }

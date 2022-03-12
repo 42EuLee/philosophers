@@ -38,6 +38,7 @@ typedef struct s_philo
 	int				dead;
 	int				eaten;
 	t_info			*info;
+	sem_t			*sem;
 	pthread_t		*thread;
 	pthread_mutex_t	*fork;
 	pthread_mutex_t	miniphone;
@@ -51,13 +52,14 @@ long	s_to_m(void);
 void	*handler(void *arg);
 t_philo	*thread_create(t_philo *philo);
 void	ft_usleep(int sleep);
-void	think_to_eat(t_info *info);
 int		odd_num(int num);
 int		even_num(int num);
 void	print_log(t_info *info);
 void	death_checker(t_philo *philo);
 void	free_malloc(t_philo *philo);
-void	eat_to_sleep(t_info *info);
 int		check_invalid(int argc, char **argv);
+void	think_to_eat(t_info *info);
+void	eat_to_sleep(t_info *info);
+t_philo	*thread_create(t_philo *philo);
 
 #endif

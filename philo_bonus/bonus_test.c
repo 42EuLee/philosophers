@@ -3,8 +3,6 @@
 #include <semaphore.h>
 #include <unistd.h>
   
-
-  
 void* thread(void* arg)
 {
 	sem_t *mutex;
@@ -40,5 +38,5 @@ int main(void)
     pthread_join(t2,NULL);
 	sem_close(mutex);
     sem_unlink(test);
-    return 0;
+    return (0);
 }
