@@ -1,14 +1,4 @@
-#include "philosopher_bonus.h"
-
-t_philo	*malloc_objects(t_philo *philo)
-{
-	philo->info = (t_info *)malloc(sizeof(t_info) * philo->num);
-	philo->thread = malloc(sizeof(pthread_t) * philo->num);
-	philo->pid = malloc(sizeof(int) * philo->num);
-	philo->eat_thread = malloc(sizeof(pthread_t));
-	philo->death_thread = malloc(sizeof(pthread_t));
-	return (philo);
-}
+#include "philosopher.h"
 
 t_philo	*init_threads(int argc, char **argv)
 {
@@ -26,7 +16,10 @@ t_philo	*init_threads(int argc, char **argv)
 	}
 	else
 		philo->eat_cycle = -1;
+	philo->info = (t_info *)malloc(sizeof(t_info) * philo->num);
+	philo->fork = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t)
+			* philo->num);
 	pthread_mutex_init(&philo->miniphone, NULL);
-	philo = malloc_objects(philo);
+	philo->thread = malloc(sizeof(pthread_t) * philo->num);
 	return (philo);
 }

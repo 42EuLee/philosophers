@@ -2,7 +2,7 @@ NAME 	= philo
 
 PHILO_BONUS = philo_bonus
 
-CC		= gcc -Wall -Wextra -Werror -pthread
+CC		= gcc -Wall -Wextra -Werror -pthread -fsanitize=address -g3
 
 RM		= rm -f
 
@@ -10,8 +10,9 @@ SRCS	= ft_atoi.c philosopher.c init_threads.c s_to_m.c thread_create.c ft_usleep
 			think_to_eat.c even_num.c odd_num.c print_log.c death_checker.c free_malloc.c \
 			eat_to_sleep.c init_states.c check_invalid.c
 
-SRCS_B	= philosopher_bonus.c init_threads.c init_states.c ft_atoi.c s_to_m.c think_to_eat.c \
-			even_num.c odd_num.c eat_to_sleep.c ft_usleep.c print_log.c death_checker.c
+SRCS_B	= init_threads.c init_states.c ft_atoi.c s_to_m.c think_to_eat.c \
+			eat_to_sleep.c ft_usleep.c print_log.c death_checker.c init_semaphores.c \
+			sem_close_all.c sem_unlink_all.c free_malloc.c check_invalid.c main.c
 
 OBJS	= $(SRCS:.c=.o)
 
@@ -33,7 +34,7 @@ test: re
 		./philo 50 410 200 200
 
 test2: re
-		./philo_bonus 4 400 200 200 1
+		./philo_bonus 10 402 200 200 20
 
 clean:
 		$(RM) $(OBJS) $(OBJS_B)

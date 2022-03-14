@@ -8,7 +8,7 @@ t_philo	*thread_create(t_philo *philo)
 	i = 0;
 	while (i < philo->num)
 	{
-		error = pthread_create(&philo->thread[i], NULL, &handler,
+		error = pthread_create(&philo->thread[i], NULL, &routine,
 				&philo->info[i]);
 		if (error != 0)
 			printf("\n Thread can't be created: [%s]", strerror(error));

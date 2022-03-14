@@ -1,10 +1,9 @@
-#include "philosopher_bonus.h"
+#include "philosopher.h"
 
 void	print_log(t_info *info)
 {
 	pthread_mutex_lock(&info->ptr->miniphone);
-	sem_wait(info->ptr->print);
-	if (!info->ptr->dead)
+	if (!info->ptr->dead && info->ptr->eaten < info->ptr->num)
 	{
 		if (info->state == forking)
 			printf("%s%ld %d has taken a fork\n%s", GREEN, s_to_m(),
@@ -16,6 +15,10 @@ void	print_log(t_info *info)
 		if (info->state == eating)
 			printf("%s%ld %d is eating\n%s", YELLOW, s_to_m(), info->id, NC);
 	}
-	sem_post(info->ptr->print);
+	if ((info->ptr->dead) == 1)
+	{
+		info->ptr->dead++;
+		printf("%s%ld %d died%s\n", RED, s_to_m(), info->id, NC);
+	}
 	pthread_mutex_unlock(&info->ptr->miniphone);
 }
