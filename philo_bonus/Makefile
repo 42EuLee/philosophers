@@ -6,14 +6,14 @@
 #    By: leu-lee <leu-lee@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/15 11:24:54 by leu-lee           #+#    #+#              #
-#    Updated: 2022/03/15 15:42:26 by leu-lee          ###   ########.fr        #
+#    Updated: 2022/03/15 16:27:33 by leu-lee          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME	 	= philo_bonus
 
 CC			= gcc
-CFLAGS		= -Wall -Wextra -Werror -pthread -fsanitize=address
+CFLAGS		= -Wall -Wextra -Werror -pthread
 RM			= rm -f
 
 SRCS_DIR	= ./src
@@ -41,7 +41,7 @@ $(OBJS_DIR)/%.o: $(SRCS_DIR)/%.c
 
 
 test: re
-		./philo_bonus 4 400 200 200 5
+		./philo_bonus 5 399 200 200 5
 
 clean:
 		$(RM) $(OBJS)

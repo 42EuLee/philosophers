@@ -6,7 +6,7 @@
 /*   By: leu-lee <leu-lee@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 11:26:14 by leu-lee           #+#    #+#             */
-/*   Updated: 2022/03/15 12:08:32 by leu-lee          ###   ########.fr       */
+/*   Updated: 2022/03/15 16:41:56 by leu-lee          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,5 +34,6 @@ int	main(int argc, char **argv)
 		pthread_mutex_destroy(&philo->fork[i]);
 	pthread_mutex_destroy(&philo->miniphone);
 	free_malloc(philo);
+	system("leaks philo");
 	return (0);
 }

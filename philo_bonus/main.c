@@ -6,7 +6,7 @@
 /*   By: leu-lee <leu-lee@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 11:25:06 by leu-lee           #+#    #+#             */
-/*   Updated: 2022/03/15 11:25:06 by leu-lee          ###   ########.fr       */
+/*   Updated: 2022/03/15 16:40:48 by leu-lee          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ int	main(int argc, char **argv)
 	sem_close_all(philo);
 	sem_unlink_all(philo);
 	free_malloc(philo);
+	system("leaks philo_bonus");
 	pthread_mutex_destroy(&philo->miniphone);
 	return (0);
 }

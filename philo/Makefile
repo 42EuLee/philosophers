@@ -6,14 +6,14 @@
 #    By: leu-lee <leu-lee@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/15 11:23:18 by leu-lee           #+#    #+#              #
-#    Updated: 2022/03/15 15:41:40 by leu-lee          ###   ########.fr        #
+#    Updated: 2022/03/15 16:42:21 by leu-lee          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME	 	= philo
 
 CC			= gcc
-CFLAGS		= -Wall -Wextra -Werror -pthread -fsanitize=address
+CFLAGS		= -Wall -Wextra -Werror -pthread
 RM			= rm -f
 
 SRCS_DIR	= ./src
@@ -37,7 +37,7 @@ $(OBJS_DIR)/%.o: $(SRCS_DIR)/%.c
 	$(CC) $(INCLUDES) -c $< -o $@
 
 test: re
-		./philo 4 400 200 400 5
+		./philo 4 400 200 200 5
 
 clean:
 		$(RM) $(OBJS)
