@@ -1,48 +1,54 @@
-NAME 	= philo
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: leu-lee <leu-lee@student.42.fr>            +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2022/03/15 11:24:54 by leu-lee           #+#    #+#              #
+#    Updated: 2022/03/15 15:42:26 by leu-lee          ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
 
-PHILO_BONUS = philo_bonus
+NAME	 	= philo_bonus
 
-CC		= gcc -Wall -Wextra -Werror -pthread -fsanitize=address -g3
+CC			= gcc
+CFLAGS		= -Wall -Wextra -Werror -pthread -fsanitize=address
+RM			= rm -f
 
-RM		= rm -f
+SRCS_DIR	= ./src
+OBJS_DIR 	= ./obj
 
-SRCS	= ft_atoi.c philosopher.c init_threads.c s_to_m.c thread_create.c ft_usleep.c \
-			think_to_eat.c even_num.c odd_num.c print_log.c death_checker.c free_malloc.c \
-			eat_to_sleep.c init_states.c check_invalid.c
+SRCS		= init_threads.c init_states.c ft_atoi.c s_to_m.c think_to_eat.c \
+				eat_to_sleep.c ft_usleep.c print_log.c death_checker.c init_semaphores.c \
+				sem_close_all.c sem_unlink_all.c free_malloc.c check_invalid.c
 
-SRCS_B	= init_threads.c init_states.c ft_atoi.c s_to_m.c think_to_eat.c \
-			eat_to_sleep.c ft_usleep.c print_log.c death_checker.c init_semaphores.c \
-			sem_close_all.c sem_unlink_all.c free_malloc.c check_invalid.c main.c
+#SRCS_PHILO	=		$(addprefix $(SRCS_DIR), $(SRCS))
 
-OBJS	= $(SRCS:.c=.o)
+OBJS		= $(SRCS:%.c=$(OBJS_DIR)/%.o)
 
-OBJS_B	= $(SRCS_B:.c=.o)
+INCLUDES	= -Iincludes
 
+all:	$(NAME)
 
-all:	$(PHILO_BONUS)
+$(NAME): $(OBJS) main.c
+		# $(CC) $(addprefix $(OBJS_DIR)/, $(OBJS)) $(CFLAGS) $(INCLUDES) main.c -o $@
+		$(CC) $(CFLAGS) $(INCLUDES) main.c $(OBJS) -o $@
 
-$(NAME): $(OBJS)
-		$(CC) $(OBJS) -o $@
-
-bonus: $(PHILO_BONUS)
-
-$(PHILO_BONUS): $(OBJS_B)
-		$(CC) $(OBJS_B) -o $@
+$(OBJS_DIR)/%.o: $(SRCS_DIR)/%.c
+	mkdir -p $(OBJS_DIR)
+	$(CC) $(INCLUDES) -c $< -o $@
 
 
 test: re
-		./philo 50 410 200 200
-
-test2: re
-		./philo_bonus 10 402 200 200 20
+		./philo_bonus 4 400 200 200 5
 
 clean:
-		$(RM) $(OBJS) $(OBJS_B)
+		$(RM) $(OBJS)
 
 fclean: clean
-		$(RM)  $(NAME) $(PHILO_BONUS) $(OBJS) $(OBJS_B)
+		$(RM)  $(NAME)
 
 re:		fclean all
-		make bonus
 
 .PHONY: all run clean

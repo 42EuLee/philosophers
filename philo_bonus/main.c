@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: leu-lee <leu-lee@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/03/15 11:25:06 by leu-lee           #+#    #+#             */
+/*   Updated: 2022/03/15 11:25:06 by leu-lee          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philosopher_bonus.h"
 
 void	*eat_check(void *arg)
@@ -29,14 +41,15 @@ void	*routine(void *arg)
 	return (NULL);
 }
 
-void	philosopher(t_philo *philo)
+void	philo_create(t_philo *philo)
 {
 	int	i;
 
 	i = -1;
 	while (++i < philo->num)
 	{
-		if (fork() == 0)
+		philo->pid[i] = fork();
+		if (philo->pid[i] == 0)
 		{
 			pthread_create(&philo->thread[i], NULL, &death_checker,
 				&philo->info[i]);
@@ -49,7 +62,7 @@ void	philosopher(t_philo *philo)
 int	main(int argc, char **argv)
 {	
 	t_philo		*philo;
-	static int	i;
+	int			i;
 
 	if (check_invalid(argc, argv) == 1)
 	{
@@ -59,18 +72,16 @@ int	main(int argc, char **argv)
 	philo = init_threads(argc, argv);
 	philo = init_semaphores(philo);
 	philo = init_states(philo);
-	philosopher(philo);
+	philo_create(philo);
 	if (philo->eat_cycle > 0)
 		pthread_create(philo->eat_thread, NULL, &eat_check, philo);
-	while (i++ < philo->num)
-	{
-		sem_wait(philo->death);
-		sem_post(philo->death);
-	}
+	sem_wait(philo->death);
+	i = -1;
+	while (++i < philo->num)
+		kill(philo->pid[i], SIGTERM);
 	sem_close_all(philo);
 	sem_unlink_all(philo);
 	free_malloc(philo);
 	pthread_mutex_destroy(&philo->miniphone);
-	//system("leaks philo_bonus");
 	return (0);
 }
